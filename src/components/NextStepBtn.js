@@ -4,7 +4,7 @@ class NextStepBtn extends Component {
     render() {
         return (
             <div className="action-box">
-                <a id="J_saveOrder" href="javascript:void(0);" className="button">下一步</a>
+                <a id="J_saveOrder" href="#" className="button">下一步</a>
             </div>
         );
     }

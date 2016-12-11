@@ -8145,4 +8145,12 @@ i.and,span.num {
 .width_change .order-progress .prog-last {
 	width: 11.2%
 }
-/*# sourceMappingURL=book.css.map */
+
+.none{
+	display: none;
+}
+
+.tipMsg{
+	position: absolute;
+	z-index: 1000;
+}

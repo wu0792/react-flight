@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
+import AreaHeader from './AreaHeader'
 
 class Contact extends Component {
     render() {
         return (
             <div id="J_contact">
                 <div className="contact-box">
-                    <div className="box-tit">
-                        <h2>联系人</h2>
-                    </div>
+                    <AreaHeader title="联系人" />
                     <div className="basic-card">
                         <div className="form-line">
                             <div className="form-item contact-name c-dropdown_2">
@@ -33,7 +32,7 @@ class Contact extends Component {
                                 </div>
                                 <div className="form-hint-msg hide" >
                                     <i className="ico-info"></i>
-                                    <span>该号码已绑定携程账号，<a id="linkLogin" href="javascript:;">登录</a>后预订成功可享会员服务</span>
+                                    <span>该号码已绑定携程账号，<a id="linkLogin" href="#">登录</a>后预订成功可享会员服务</span>
                                 </div>
                             </div>
                             <div className="form-item contact-mail">

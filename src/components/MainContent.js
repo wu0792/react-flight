@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MessageContainer from './MessageContainer'
+import TipContainer from './TipContainer'
 import PassengerList from './PassengerList'
 import SideBar from './SideBar';
 import Contact from './Contact';
@@ -11,7 +11,7 @@ class MainContent extends Component {
             <div className="container">
                 <div className="main" id="J_main">
                     <div id="J_step1">
-                        <MessageContainer />
+                        <TipContainer />
                         <PassengerList />
                         <Contact />
                         <NextStepBtn />

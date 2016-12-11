@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {setTooltip, hideTooltip, revertHideTooltip} from '../generic/eventUtil';
+import PassengerNameHover from './PassengerNameHover'
 
 class Passenger extends Component {
     render() {
@@ -28,8 +30,15 @@ class Passenger extends Component {
           <i className="J_langIcon current-icon">
           </i>
         </div>
-        <i className="ico-help c-pop_9">
+        <i className="ico-help c-pop_9" 
+           ref={(el) => {this.icon1=el;}} 
+           onMouseOver={(el) => setTooltip(this.icon1, this.tip1Msg)}
+           onMouseOut={(el) => hideTooltip(this.tip1Msg)}>
         </i>
+        <PassengerNameHover
+          revertHideTooltip={() => revertHideTooltip(this.tip1Msg)}
+          hideTooltip={() => hideTooltip(this.tip1Msg)}
+          ref={(el) => {this.tip1Msg=el.hoverTip;}}/>
       </div>
       <div className="form-line passenger-identity">
         <div className="form-item">
@@ -69,8 +78,8 @@ class Passenger extends Component {
     </div>
   </div>
   <div className="passenger-num">
-    <i className="ico-num-1">
-      1
+    <i className={`ico-num-${this.props.num}`}>
+      {this.props.num}
     </i>
   </div>
 </div>
