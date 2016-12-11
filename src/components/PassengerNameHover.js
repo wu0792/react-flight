@@ -11,7 +11,6 @@ class PassengerNameHover extends Component {
 
     clickHeaderHandler(i){
         this.setState({activeIndex: i});
-        // debugger;
         this.forceUpdate();
     }
 
