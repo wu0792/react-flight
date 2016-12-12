@@ -16,8 +16,9 @@ class PassengerInput extends Component {
 
     render() {
         let id = this.getId();
+        let className = classNames(this.props.className)
         return (
-            <div className={this.props.className}>
+            <div className={className}>
                 <input type="text" id={id} maxLength={this.props.maxLength || ''} className="form-input" />
                 <label htmlFor={id} className="form-input-hint">{this.props.placeholder}</label>
             </div>

@@ -10,11 +10,24 @@ class DropdownList extends Component {
             selectedText: null
         }
 
+        let selectedValue = null, selectedText = null;
         let selectFirstItem = props.selectFirst === "true";
-        if (selectFirstItem && this.props.children.length) {
-            let firstItem = this.props.children[0];
-            this.state = { isSlidDown: false, selectedValue: firstItem.props.value, selectedText: firstItem.props.text };
+        let selectedItem = null;
+        if (selectFirstItem) {
+            selectedItem = this.props.children[0];
+        } else if (props.defaultValue) {
+            let items = this.props.children.filter(e => e.props.value === props.defaultValue);
+            if (items.length) {
+                selectedItem = items[0];
+            }
         }
+
+        if (selectedItem) {
+            selectedValue = selectedItem.props.value;
+            selectedText = selectedItem.props.text;
+        }
+
+        this.state = { isSlidDown: false, selectedValue: selectedValue, selectedText: selectedText };
     }
 
     toggleDropdown() {
