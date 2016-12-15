@@ -40,6 +40,10 @@ class DropdownList extends Component {
         });
 
         this.setState({ selectedValue: item.props.value, selectedText: item.props.text, isSlidDown: false });
+        if (item.props.value !== this.state.selectedValue) {
+            const oldItem = { value: this.state.selectedValue, text: this.state.selectedText };
+            this.props.onChange && this.props.onChange(item, oldItem, this);
+        }
     }
 
     componentDidMount() {
@@ -48,8 +52,8 @@ class DropdownList extends Component {
     }
 
     render() {
+        let _this = this;
         let newChildren = React.Children.map(this.props.children, (item) => {
-            let _this = this;
             return React.cloneElement(item, {
                 ref: (el) => this[`item_${item.props.value}`] = el,
                 onSelect: () => { _this.onSelectItem.bind(_this)(item) }
@@ -61,7 +65,7 @@ class DropdownList extends Component {
                 <div className="form-select c-dropdown_2">
                     <div className="form-select-txt"
                         ref={(el) => { this.title = el; } }
-                        onClick={() => this.toggleDropdown()}>
+                        onClick={this.toggleDropdown.bind(this)}>
                         <span>{this.state.selectedText || ''}</span>
                         <i className="ico-caret-down"></i>
                     </div>

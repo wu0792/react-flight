@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import AreaHeader from './AreaHeader'
+import AreaHeader from './AreaHeader';
+import PassengerInput from './PassengerInput';
 
 class Contact extends Component {
     render() {
@@ -9,14 +10,7 @@ class Contact extends Component {
                     <AreaHeader title="联系人" />
                     <div className="basic-card">
                         <div className="form-line">
-                            <div className="form-item contact-name c-dropdown_2">
-                                <input id="I_contact_name" type="text" className="form-input c-input_4" />
-                                <label htmlFor="I_contact_name" className="form-input-hint">中文或英文姓名</label>
-                                <div className="form-error-msg hide c-errorstyle_15">
-                                    <i className="ico-error"></i>
-                                    <span>请填写正确的中文或英文联系人姓名</span>
-                                </div>
-                            </div>
+                            <PassengerInput className="form-item contact-name c-dropdown_2" placeholder="中文或英文姓名" />
                             <div className="form-item contact-phone">
                                 <div className="form-select c-dropdown_2">
                                     <div className="form-select-txt">
@@ -35,14 +29,7 @@ class Contact extends Component {
                                     <span>该号码已绑定携程账号，<a id="linkLogin" href="#">登录</a>后预订成功可享会员服务</span>
                                 </div>
                             </div>
-                            <div className="form-item contact-mail">
-                                <input id="I_contact_mail" type="text" className="form-input" />
-                                <label htmlFor="I_contact_mail" className="form-input-hint">Email(选填，接收航班信息）</label>
-                                <div className="form-error-msg hide c-errorstyle_15">
-                                    <i className="ico-error"></i>
-                                    <span>请填写正确的Email地址，格式：a@b.c</span>
-                                </div>
-                            </div>
+                            <PassengerInput className="form-item contact-mail" placeholder="Email(选填，接收航班信息）" />
                         </div>
                     </div>
                 </div>

@@ -1,22 +1,67 @@
 import React, { Component } from 'react';
 import { setTooltip, hideTooltip, revertHideTooltip } from '../generic/eventUtil';
-import PassengerNameHover from './PassengerNameHover'
-import DropdownList from './DropdownList'
-import DropdownItem from './DropdownItem'
-import ToggleEnChs from './ToggleEnChs'
-import PassengerInput from './PassengerInput'
+import PassengerNameHover from './PassengerNameHover';
+import DropdownList from './DropdownList';
+import DropdownItem from './DropdownItem';
+import ToggleEnChs from './ToggleEnChs';
+import PassengerInput from './PassengerInput';
+import { ERROR_LEVEL } from '../generic/enum';
+import TipError from '../generic/TipError';
 
+let id = 0;
 class Passenger extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      lang: 'ch'
+      lang: 'ch',
+      id: id++
     };
   }
 
   onLangChanged(lang) {
     this.setState({ lang: lang });
+    this.cardNum.reset();
+  }
+
+  onPassengerNameChange(el, passengerName) {
+    let errorList = [];
+    if (/[a-zA-Z0-9]+/.test(el.value)) {
+      errorList.push(new TipError(ERROR_LEVEL.ERROR, "请填写正确的简体中文姓名，中文姓名的第一个字必须为汉字。"));
+    }
+
+    passengerName.setErrorList(errorList);
+  }
+
+  onCardTypeChange(newItem, oldItem, cardType) {
+    this.cardNum.reset();
+    this.cardNum.focus();
+  }
+
+  onCardNumChanged(el, cardNum) {
+    let cardTypeValue = this.cardType.state.selectedValue;
+    let errorList = [];
+    //证件类型不同校验逻辑不同
+    switch (cardTypeValue) {
+      case 'id':
+        if (!/[0-9]+/.test(el.value)) {
+          errorList.push(new TipError(ERROR_LEVEL.ERROR, "请填写正确的18位身份证号码"));
+        }
+        break;
+      case 'passport':
+        if (!/^[a-zA-Z0-9]*$/.test(el.value)) {
+          errorList.push(new TipError(ERROR_LEVEL.ERROR, "请填写正确的护照号码，号码中只能包含数字或字母"));
+        }
+        break;
+      default:
+        break;
+    }
+
+    cardNum.setErrorList(errorList);
+  }
+
+  onRemovePassenger(el) {
+    this.props.onRemovePassenger && this.props.onRemovePassenger(this.state.id);
   }
 
   render() {
@@ -26,7 +71,9 @@ class Passenger extends Component {
         <div className="passenger-info">
           <div className="form">
             <div className="form-line J_lang">
-              {isLangCh && <PassengerInput className="J_passenger_name_zh" maxLength="15" placeholder="姓名，请与登机证件姓名保持一致" />}
+              {isLangCh &&
+                <PassengerInput className="J_passenger_name_zh" maxLength="15" placeholder="姓名，请与登机证件姓名保持一致"
+                  onChange={this.onPassengerNameChange.bind(this)} />}
               {!isLangCh && [
                 <PassengerInput key="first-name" className={['form-item', 'passenger-name-en', 'J_passenger_name_en']} maxLength="15" placeholder="姓（拼音） Surname" />,
                 <PassengerInput key="given-name" className={['form-item', 'passenger-name-en', 'J_passenger_name_en']} maxLength="15" placeholder="名（拼音） Given name" />
@@ -48,7 +95,7 @@ class Passenger extends Component {
             <div className="form-line passenger-identity">
               {
                 isLangCh &&
-                <DropdownList selectFirst="true">
+                <DropdownList defaultValue="id" ref={e => this.cardType = e} onChange={this.onCardTypeChange.bind(this)}>
                   <DropdownItem value="id" text="身份证" />
                   <DropdownItem value="hkb" text="户口本" />
                   <DropdownItem value="passport" text="护照" />
@@ -57,22 +104,14 @@ class Passenger extends Component {
               }
               {
                 !isLangCh &&
-                <DropdownList defaultValue="passport">
+                <DropdownList defaultValue="passport" ref={e => this.cardType = e} onChange={this.onCardTypeChange.bind(this)}>
                   <DropdownItem value="id" text="身份证" />
                   <DropdownItem value="passport" text="护照" />
                 </DropdownList>
               }
 
               &nbsp;
-              <div className="form-item">
-                <input id="p_card_no_0" className="form-input J_input text-transform-uppercase c-input_4 c-formatter_3"
-                  type="text" maxLength="18" />
-                <label htmlFor="p_card_no_0" className="form-input-hint">
-                  登机证件号码
-                </label>
-                <div className="c-repeat_10" style={{ display: "none" }}>
-                </div>
-              </div>
+              <PassengerInput ref={e => this.cardNum = e} className="form-item" maxLength="18" placeholder="登机证件号码" onChange={this.onCardNumChanged.bind(this)} />
             </div>
 
             {
@@ -94,6 +133,12 @@ class Passenger extends Component {
             </div>
           </div>
         </div>
+        <a className="delete" onClick={this.onRemovePassenger.bind(this)}>
+          <i className="close">×</i>
+          <span>
+            删除
+          </span>
+        </a>
         <div className="passenger-num">
           <i className={`ico-num-${this.props.num}`}>
             {this.props.num}
