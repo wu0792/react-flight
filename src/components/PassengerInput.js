@@ -79,6 +79,7 @@ class PassengerInput extends Component {
 
         return (
             <div className={rootClassName}>
+                {this.props.children}
                 <input type="text" id={id} maxLength={this.props.maxLength || ''} className="form-input" ref={e => this.input = e}
                     onChange={this.onChange.bind(this)} onFocus={this.onFocus.bind(this)} onBlur={this.onBlur.bind(this)} />
                 <label htmlFor={id} className="form-input-hint">{(this.state.isFocused || !this.state.value) ? this.props.placeholder : ""}</label>
