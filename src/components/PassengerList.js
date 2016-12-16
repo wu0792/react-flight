@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Passenger from './Passenger'
 import AddPassenger from './AddPassenger'
-import AreaHeader from './AreaHeader'
+import AreaHeader from './AreaHeader';
+import MiniContactList from './MiniContactList';
+import MiniContact from './MiniContact';
 
 class MainContent extends Component {
     constructor(props) {
@@ -43,6 +45,32 @@ class MainContent extends Component {
             <div className="passenger-box">
                 <div id="J_passengerList">
                     <AreaHeader title="乘客" />
+                    <MiniContactList>
+                        <MiniContact selected={true} />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                        <MiniContact />
+                    </MiniContactList>
                     <div className="c-slidedown_14">
                         {[...this.getPassengerList()]}
                         <AddPassenger onAdd={this.onAddPassenger.bind(this)} enabled={this.canAddMore()} />
