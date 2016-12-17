@@ -24,16 +24,37 @@ class MainContent extends Component {
         this.state.removedIdList.push(id);
     }
 
+    addPassenger() {
+        this.setState({
+            passengerCount: this.state.passengerCount + 1
+        });
+    }
+
     getPassengerList() {
-        let passengerList = [];
-        for (let i = 0; i < this.state.passengerCount; i++) {
-            let passenger = React.createElement(Passenger, { key: i + 1, num: i + 1, onRemovePassenger: this.onRemovePassenger.bind(this) });
-            if (!passenger.state || this.state.removedIdList.indexOf(passenger.state.id) < 0) {
-                passengerList.push(passenger);
+        let existingPassengerList = this.existingPassengerList ? this.existingPassengerList : [];
+        if (!this.existingPassengerList) {
+            this.existingPassengerList = [];
+        }
+
+        for (let i = 0; i < this.existingPassengerList.length; i++) {
+            let passenger = this.existingPassengerList[i];
+            if (passenger.state && passenger.state.id && this.state.removedIdList.indexOf(passenger.state.id) >= 0) {
+                this.existingPassengerList.splice(i, 1);
             }
         }
 
-        return passengerList;
+        for (let i = existingPassengerList.length; i < this.state.passengerCount; i++) {
+            let passenger = React.createElement(Passenger, {
+                key: i + 1,
+                num: i + 1,
+                onRemovePassenger: this.onRemovePassenger.bind(this)
+            });
+            if (!passenger.state || this.state.removedIdList.indexOf(passenger.state.id) < 0) {
+                this.existingPassengerList.push(passenger);
+            }
+        }
+
+        return this.existingPassengerList;
     }
 
     canAddMore() {
@@ -71,7 +92,7 @@ class MainContent extends Component {
                         <MiniContact />
                         <MiniContact />
                     </MiniContactList>
-                    <div className="c-slidedown_14">
+                    <div className="c-slidedown_14" ref={e => this.container = e}>
                         {[...this.getPassengerList()]}
                         <AddPassenger onAdd={this.onAddPassenger.bind(this)} enabled={this.canAddMore()} />
                     </div>
