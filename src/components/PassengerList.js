@@ -1,64 +1,65 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom'
 import Passenger from './Passenger'
 import AddPassenger from './AddPassenger'
 import AreaHeader from './AreaHeader';
 import MiniContactList from './MiniContactList';
 import MiniContact from './MiniContact';
 
-class MainContent extends Component {
+let maxId = 0;
+class PassengerList extends Component {
     constructor(props) {
         super(props);
+        this.toRemoveIdList = [];
         this.state = {
-            passengerCount: 1,
-            removedIdList: []
+            passengerIdList: [maxId++]
         };
     }
 
     onAddPassenger() {
         if (this.canAddMore()) {
-            this.setState({ passengerCount: this.state.passengerCount + 1 });
+            let newPassengerIdList = this.state.passengerIdList.slice();
+            newPassengerIdList.push(maxId++);
+            this.setState({ passengerIdList: newPassengerIdList });
         }
     }
 
     onRemovePassenger(id) {
-        this.state.removedIdList.push(id);
+        let index = this.state.passengerIdList.indexOf(id);
+        if (index >= 0) {
+            let newPassengerIdList = this.state.passengerIdList.slice();
+            newPassengerIdList.splice(index, 1);
+            this.setState({ passengerIdList: newPassengerIdList });
+        }
     }
 
-    addPassenger() {
-        this.setState({
-            passengerCount: this.state.passengerCount + 1
-        });
+    addPassenger(id) {
+        let index = this.state.passengerIdList.indexOf(id);
+        if (index < 0) {
+            let newPassengerIdList = this.state.passengerIdList.slice();
+            newPassengerIdList.push(id);
+            this.setState({ passengerIdList: newPassengerIdList });
+        }
     }
 
     getPassengerList() {
-        let existingPassengerList = this.existingPassengerList ? this.existingPassengerList : [];
-        if (!this.existingPassengerList) {
-            this.existingPassengerList = [];
-        }
-
-        for (let i = 0; i < this.existingPassengerList.length; i++) {
-            let passenger = this.existingPassengerList[i];
-            if (passenger.state && passenger.state.id && this.state.removedIdList.indexOf(passenger.state.id) >= 0) {
-                this.existingPassengerList.splice(i, 1);
-            }
-        }
-
-        for (let i = existingPassengerList.length; i < this.state.passengerCount; i++) {
+        let passengerList = [];
+        for (let i = 0; i < this.state.passengerIdList.length; i++) {
             let passenger = React.createElement(Passenger, {
-                key: i + 1,
-                num: i + 1,
-                onRemovePassenger: this.onRemovePassenger.bind(this)
+                key: this.state.passengerIdList[i],
+                onRemovePassenger: this.onRemovePassenger.bind(this),
+                idNum: this.state.passengerIdList[i],
+                displayNum: i
             });
-            if (!passenger.state || this.state.removedIdList.indexOf(passenger.state.id) < 0) {
-                this.existingPassengerList.push(passenger);
-            }
+
+            passengerList.push(passenger);
         }
 
-        return this.existingPassengerList;
+        return passengerList;
     }
 
     canAddMore() {
-        return this.state.passengerCount <= 2;
+        return this.state.passengerIdList.length <= 3;
     }
 
     render() {
@@ -102,4 +103,4 @@ class MainContent extends Component {
     }
 }
 
-export default MainContent;
+export default PassengerList;

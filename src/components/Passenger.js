@@ -8,14 +8,13 @@ import PassengerInput from './PassengerInput';
 import { ERROR_LEVEL } from '../generic/enum';
 import TipError from '../generic/TipError';
 
-let id = 0;
 class Passenger extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       lang: 'ch',
-      id: id++
+      num: 1
     };
   }
 
@@ -61,7 +60,7 @@ class Passenger extends Component {
   }
 
   onRemovePassenger(el) {
-    this.props.onRemovePassenger && this.props.onRemovePassenger(this.state.id);
+    this.props.onRemovePassenger && this.props.onRemovePassenger(this.props.idNum);
   }
 
   render() {
@@ -140,8 +139,7 @@ class Passenger extends Component {
           </span>
         </a>
         <div className="passenger-num">
-          <i className={`ico-num-${this.props.num}`}>
-            {this.props.num}
+          <i className={`ico-num-${this.props.displayNum + 1}`}>
           </i>
         </div>
       </div>
