@@ -23,9 +23,9 @@ class Passenger extends Component {
     this.cardNum.reset();
   }
 
-  onPassengerNameChange(el, passengerName) {
+  onPassengerNameChange(value, passengerName) {
     let errorList = [];
-    if (/[a-zA-Z0-9]+/.test(el.value)) {
+    if (/[a-zA-Z0-9]+/.test(value)) {
       errorList.push(new TipError(ERROR_LEVEL.ERROR, "请填写正确的简体中文姓名，中文姓名的第一个字必须为汉字。"));
     }
 
@@ -37,18 +37,18 @@ class Passenger extends Component {
     this.cardNum.focus();
   }
 
-  onCardNumChanged(el, cardNum) {
+  onCardNumChanged(value, cardNum) {
     let cardTypeValue = this.cardType.state.selectedValue;
     let errorList = [];
     //证件类型不同校验逻辑不同
     switch (cardTypeValue) {
       case 'id':
-        if (!/[0-9]+/.test(el.value)) {
+        if (!/[0-9]+/.test(value)) {
           errorList.push(new TipError(ERROR_LEVEL.ERROR, "请填写正确的18位身份证号码"));
         }
         break;
       case 'passport':
-        if (!/^[a-zA-Z0-9]*$/.test(el.value)) {
+        if (!/^[a-zA-Z0-9]*$/.test(value)) {
           errorList.push(new TipError(ERROR_LEVEL.ERROR, "请填写正确的护照号码，号码中只能包含数字或字母"));
         }
         break;
@@ -59,7 +59,7 @@ class Passenger extends Component {
     cardNum.setErrorList(errorList);
   }
 
-  onRemovePassenger(el) {
+  onRemovePassenger() {
     this.props.onRemovePassenger && this.props.onRemovePassenger(this.props.idNum);
   }
 
@@ -115,7 +115,7 @@ class Passenger extends Component {
 
             {
               !isLangCh &&
-              <PassengerInput className="form-line" maxLength="10" placeholder="出生日期，YYYY-MM-DD" />
+              <PassengerInput datePicker={true} className="form-line" maxLength="10" placeholder="出生日期，YYYY-MM-DD" />
             }
           </div>
 

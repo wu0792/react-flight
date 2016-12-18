@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { ERROR_LEVEL } from '../generic/enum';
+import DatePicker from 'react-datepicker';
+require('react-datepicker/dist/react-datepicker.css');
+
 let classNames = require('classnames');
 let incId = 0;
 
@@ -9,6 +12,7 @@ class PassengerInput extends Component {
         this.state = {
             isFocused: false,
             value: '',
+            dateValue: null,
             hasError: false,
             errorList: []
         };
@@ -57,19 +61,48 @@ class PassengerInput extends Component {
         )
     }
 
-    onChange(event) {
+    onInputChange(event) {
         this.setState({ value: event.target.value });
         this.props.onChange && this.props.onChange(event.target, this);
     }
 
-    onFocus(event) {
+    onDateChange(value) {
+        this.setState({ dateValue: value, isFocused: false });
+        this.props.onChange && this.props.onChange(value.toDate(), this);
+    }
+
+    onInputFocus(event) {
+        this.setState({ isFocused: true });
+        this.props.onFocus && this.props.onFocus(event.target, this);
+    }
+
+    onDateFocus(value) {
+        if (this.labelForDatePicker) {
+            let existFakeInput = this.labelForDatePicker.previousSibling && this.labelForDatePicker.previousSibling.tagName === 'INPUT';
+            if (!existFakeInput) {
+                let parentNode = this.labelForDatePicker.parentNode;
+                let newInput = document.createElement('input');
+                newInput.className = 'form-input fake-input';
+                parentNode.insertBefore(newInput, this.labelForDatePicker);
+                newInput.focus();
+            } else {
+                this.labelForDatePicker.previousSibling.focus();
+            }
+        }
+
         this.setState({ isFocused: true });
         this.props.onFocus && this.props.onFocus(event.target, this);
     }
 
     onBlur(event) {
+        // debugger;
         this.setState({ isFocused: false });
         this.props.onBlur && this.props.onBlur(event.target, this);
+    }
+
+    getDatePlaceHolder() {
+        // debugger;
+        return (this.state.isFocused || !this.state.dateValue) ? this.props.placeholder : "";
     }
 
     render() {
@@ -80,9 +113,17 @@ class PassengerInput extends Component {
         return (
             <div className={rootClassName}>
                 {this.props.children}
-                <input type="text" id={id} maxLength={this.props.maxLength || ''} className="form-input" ref={e => this.input = e}
-                    onChange={this.onChange.bind(this)} onFocus={this.onFocus.bind(this)} onBlur={this.onBlur.bind(this)} />
-                <label htmlFor={id} className="form-input-hint">{(this.state.isFocused || !this.state.value) ? this.props.placeholder : ""}</label>
+                {this.props.datePicker ?
+                    [<DatePicker key="datePicker" id={id} selected={this.state.dateValue} maxLength={this.props.maxLength || ''} className="form-input" ref={e => this.input = e}
+                        dateFormat="YYYY-MM-DD"
+                        onChange={this.onDateChange.bind(this)} onFocus={this.onDateFocus.bind(this)} onBlur={this.onBlur.bind(this)} />,
+                    <label key="label" htmlFor={id} ref={e => this.labelForDatePicker = e} className="form-input-hint">{this.getDatePlaceHolder()}</label>]
+                    :
+                    [<input type="text" key="input" id={id} maxLength={this.props.maxLength || ''} className="form-input" ref={e => this.input = e}
+                        onChange={this.onInputChange.bind(this)} onFocus={this.onInputFocus.bind(this)} onBlur={this.onBlur.bind(this)} />,
+                    <label key="label" htmlFor={id} className="form-input-hint">{(this.state.isFocused || !this.state.value) ? this.props.placeholder : ""}</label>
+                    ]
+                }
                 {
                     this.state.errorList.map((e, index) =>
                         (<div key={index} className={_this.getIcoRootClassName(e)} >
