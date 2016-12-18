@@ -83,6 +83,8 @@ class PassengerInput extends Component {
                 let parentNode = this.labelForDatePicker.parentNode;
                 let newInput = document.createElement('input');
                 newInput.className = 'form-input fake-input';
+                newInput.style.width = "0";
+                newInput.style.height = "0";
                 parentNode.insertBefore(newInput, this.labelForDatePicker);
                 newInput.focus();
             } else {
@@ -95,13 +97,11 @@ class PassengerInput extends Component {
     }
 
     onBlur(event) {
-        // debugger;
         this.setState({ isFocused: false });
         this.props.onBlur && this.props.onBlur(event.target, this);
     }
 
     getDatePlaceHolder() {
-        // debugger;
         return (this.state.isFocused || !this.state.dateValue) ? this.props.placeholder : "";
     }
 
